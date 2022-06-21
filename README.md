@@ -1,10 +1,12 @@
 # weworkPoc
 
+> api urls and request collection : import WeWork-MuleAPIs.postman_collection.json to postman 
 
-set below properties  while running the api. default values as below. change values as per the deployment
+
+Note: set below properties  while running the api. default values as below. change values as per the deployment
 
 
-mule.env   is set to dev , add environment propertiy to change or change in code for testing.
+	mule.env   is set to dev , add environment propertiy to change or change in code for testing.
 
 
 
@@ -48,5 +50,6 @@ properties:
 
 
 cartmanagement-sys-api
+	No need to setany properties. 
 	
 	
