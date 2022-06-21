@@ -9,7 +9,29 @@ mule.env   is set to dev , add environment propertiy to change or change in code
 
 
 cartmanagement-exp-api 
+	excample URL: 
+	
+	POST:   http://localhost:8083/api/cart/{customerId}
+			body: 
+			
+			 [{
+				
+				"Spacetype": "dedicated",
+				"capacity": 10,
+				"Location": "Gaitheresburg",
+				"MoveinDate": "2022-06-26",
+				"MoveOutDate": "2022-06-30",
+				"BillingFrq": "monthly",
+				"Cost": "100",
+				"Duration": 5
+			  }]
+			  
+	GET:   http://localhost:8083/api/cart/{customerId}
+	
 
+
+
+properties:
 	procapi.host=localhost     ProcessAPI HOST
 	procapi.port=8082		   ProcessAPI PORT
 	apiId=123
@@ -19,6 +41,7 @@ cartmanagement-exp-api
 
 cartmanagement-proc-api
 
+properties:
 	sysapi.host=localhost
 	sysapi.port=8081
 
