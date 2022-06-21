@@ -1,0 +1,231 @@
+{
+	"info": {
+		"_postman_id": "d1f01370-75ec-4c46-a36f-e2bcc44c4c75",
+		"name": "WeWork-MuleAPIs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Local",
+			"item": [
+				{
+					"name": "expAPI",
+					"item": [
+						{
+							"name": "getCart",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8083/api/cart/12366",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8083",
+									"path": [
+										"api",
+										"cart",
+										"12366"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "postCart",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "\r\n [{\r\n\t\r\n    \"Spacetype\": \"dedicated\",\r\n    \"capacity\": 10,\r\n    \"Location\": \"Gaitheresburg\",\r\n    \"MoveinDate\": \"2022-06-26\",\r\n    \"MoveOutDate\": \"2022-06-30\",\r\n    \"BillingFrq\": \"monthly\",\r\n    \"Cost\": \"100\",\r\n    \"Duration\": 5\r\n  }]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8083/api/cart/12366",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8083",
+									"path": [
+										"api",
+										"cart",
+										"12366"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "ProcessAPI",
+					"item": [
+						{
+							"name": "getCart",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8082/procapi/getfromcart/888",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"procapi",
+										"getfromcart",
+										"888"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "postCart",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "\r\n {\r\n\t\"customerId\":\"888\",\r\n    \"Spacetype\": \"dedicated\",\r\n    \"capacity\": 10,\r\n    \"Location\": \"Gaitheresburg\",\r\n    \"MoveinDate\": \"2022-06-25\",\r\n    \"MoveOutDate\": \"2022-06-30\",\r\n    \"BillingFrq\": \"monthly\",\r\n    \"Cost\": \"100\",\r\n    \"Duration\": 6\r\n  }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8082/procapi/addtocart",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"procapi",
+										"addtocart"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "SysAPI",
+					"item": [
+						{
+							"name": "postCart",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "\r\n {\r\n\t\"customerId\":\"456\",\r\n    \"Spacetype\": \"dedicated\",\r\n    \"capacity\": 10,\r\n    \"Location\": \"Gaitheresburg\",\r\n    \"MoveinDate\": \"2022-06-25\",\r\n    \"MoveOutDate\": \"2022-06-30\",\r\n    \"BillingFrq\": \"monthly\",\r\n    \"Cost\": \"100\",\r\n    \"Duration\": 6\r\n  }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8081/sysapi/addtocart",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"sysapi",
+										"addtocart"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getCart",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8081/sysapi/getfromcart/4566",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"sysapi",
+										"getfromcart",
+										"4566"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "GetCartInfo",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://cartmanagement-exp-api.us-e2.cloudhub.io/api/cart/12366",
+					"protocol": "http",
+					"host": [
+						"cartmanagement-exp-api",
+						"us-e2",
+						"cloudhub",
+						"io"
+					],
+					"path": [
+						"api",
+						"cart",
+						"12366"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PostCartInfo",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n [{\r\n\t\r\n    \"Spacetype\": \"dedicated\",\r\n    \"capacity\": 10,\r\n    \"Location\": \"Gaitheresburg\",\r\n    \"MoveinDate\": \"2022-06-26\",\r\n    \"MoveOutDate\": \"2022-06-30\",\r\n    \"BillingFrq\": \"monthly\",\r\n    \"Cost\": \"100\",\r\n    \"Duration\": 5\r\n  }]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://cartmanagement-exp-api.us-e2.cloudhub.io/api/cart/12366",
+					"protocol": "http",
+					"host": [
+						"cartmanagement-exp-api",
+						"us-e2",
+						"cloudhub",
+						"io"
+					],
+					"path": [
+						"api",
+						"cart",
+						"12366"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
