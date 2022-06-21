@@ -198,14 +198,6 @@ output application/json
         </ee:transform>
     </flow>
     <flow name="post:\cart\(customerId):application\json:cartmanagement-config">
-        <choice doc:name="Choice" doc:id="4baa6ba7-f8c2-413f-8018-fc1e0bb30648">
-			<when expression="#[sizeOf(payload) &gt; 1]">
-				<raise-error doc:name="Raise error" doc:id="c3693b84-d50c-4fe8-a6dd-1b35152cd212" type="CUSTOM:NOT_IMPLIMENTED_ARRAY_ITEMS" description="Not yet implimented for multiple cart items"/>
-			</when>
-			<otherwise >
-				<logger level="INFO" doc:name="Logger" doc:id="98205740-c4b4-4256-964a-a5ebe732289b" message="input request having 1 item."/>
-			</otherwise>
-		</choice>
 		<ee:transform>
             <ee:variables>
                 <ee:set-variable variableName="customerId">attributes.uriParams.'customerId'</ee:set-variable>
