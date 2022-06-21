@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
+    <global-property doc:name="Global Property" doc:id="8fdf5e8b-9e00-4158-bf99-ea37fbb69b6f" name="mule.env" value="dev" />
+    <configuration-properties doc:name="Configuration properties" doc:id="d5a9d1ad-3f64-46d4-8d69-aedd27e079c4" file="common.properties" />
+    <configuration-properties doc:name="Configuration properties" doc:id="373b9c48-2e27-4b26-9eb4-3d9270b9c13a" file="mule.${mule.env}.properties" />       
+	<http:listener-config name="cartmanagement-httpListenerConfig">
+        <http:listener-connection host="0.0.0.0" port="${http.port}" />
+    </http:listener-config>
+	<os:config name="Cart_ObjectStore_Config" doc:name="ObjectStore Config" doc:id="7ba5346d-a103-4be2-9cc9-bf99b1eb40db" >
+		<os:connection >
+			<reconnection failsDeployment="true" >
+				<reconnect />
+			</reconnection>
+		</os:connection>
+	</os:config>
+	<os:object-store name="Cart_Object_store" doc:name="Object store" doc:id="b4a4ffec-d934-485d-b317-bf5ba5c423e1" maxEntries="100" expirationInterval="60" config-ref="Cart_ObjectStore_Config" />
+	
+
+</mule>

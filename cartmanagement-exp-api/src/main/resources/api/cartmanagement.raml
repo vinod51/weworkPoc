@@ -1,0 +1,91 @@
+#%RAML 1.0
+title: CartManagement
+baseUri: order
+mediaType:
+  - application/json
+version: "1.0"
+protocols:
+  - HTTP
+  - HTTPS
+uses:
+  lib: libraries/library.raml
+
+types:
+  cartItem: !include dataTypes/cartDatatype.json  
+  Order: !include dataTypes/orderDatatype.json
+
+/cart:
+  /{customerId}:
+      get:
+        description: Fetch all the cart items for customer.
+        is: [lib.transacitonHeader,lib.errorCodes]
+        responses:  
+          200:
+            body:
+              type: cartItem
+              example: !include examples/cartExample.raml
+                  
+      post:
+        description: adding item to cart for customer.
+        is: [lib.transacitonHeader,lib.errorCodes]
+        body:
+          type: cartItem 
+          example: !include examples/cartExample.raml
+        responses:  
+          200:
+            body:
+              type: string
+              example: |
+                {"Message":"Item added to the cart"}
+        
+          
+      delete:
+        description: detele items from the cart for customer.
+        is: [lib.transacitonHeader,lib.errorCodes]
+        headers:
+         cartItemNo:
+          required: true
+          type: string
+          example: "1" 
+        responses:  
+          200:
+            body:
+              type: string
+              example: |
+                {"Message":"Item deleted from the cart"}
+        
+        
+        
+      patch:  
+        description: update item details in the cart for customer.
+        is: [lib.transacitonHeader,lib.errorCodes]
+        
+      put:
+        description: update the cart item for customer.
+        is: [lib.transacitonHeader,lib.errorCodes]
+    
+
+    
+/order:
+  get:
+  post:
+    description: placing order.
+    is: [lib.transacitonHeader,lib.errorCodes]
+    body:
+      type: Order 
+      example: !include examples/orderExample.raml
+    responses:  
+      200:
+        body:
+          type: string
+          example: |
+            {"Message":"Order placed Successfully ",
+              "OrderNo":"ORD1235"}
+
+  
+
+
+  
+   
+
+  

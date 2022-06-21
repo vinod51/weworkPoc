@@ -1,0 +1,95 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$ref": "#/definitions/OrderDetails",
+    "definitions": {
+        "OrderDetails": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "Name": {
+                    "type": "string"
+                },
+                "LastName": {
+                    "type": "string"
+                },
+                "PhoneNo": {
+                    "type": "string",
+                    "format": "integer"
+                },
+                "EmailId": {
+                    "type": "string"
+                },
+                "ItemsCost": {
+                    "type": "number"
+                },
+                "BillingAddress": {
+                    "$ref": "#/definitions/BillingAddress"
+                },
+                "PaymentDetails": {
+                    "$ref": "#/definitions/PaymentDetails"
+                },
+                "Tax": {
+                    "type": "number"
+                },
+                "TotalCost": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "BillingAddress",
+                "EmailId",
+                "ItemsCost",
+                "LastName",
+                "Name",
+                "PaymentDetails",
+                "PhoneNo",
+                "Tax",
+                "TotalCost"
+            ],
+            "title": "OrderDetails"
+        },
+        "BillingAddress": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "StreetAddress": {
+                    "type": "string"
+                },
+                "City": {
+                    "type": "string"
+                },
+                "State": {
+                    "type": "string"
+                },
+                "pincode": {
+                    "type": "string",
+                    "format": "integer"
+                }
+            },
+            "required": [
+                "City",
+                "State",
+                "StreetAddress",
+                "pincode"
+            ],
+            "title": "BillingAddress"
+        },
+        "PaymentDetails": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "PaymentType": {
+                    "type": "string"
+                },
+                "transactionNo": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "PaymentType",
+                "transactionNo"
+            ],
+            "title": "PaymentDetails"
+        }
+    }
+}

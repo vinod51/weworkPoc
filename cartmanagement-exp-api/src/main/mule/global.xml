@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway" xmlns:order2cash-opportunity2crm-system-api="http://www.mulesoft.org/schema/mule/order2cash-opportunity2crm-system-api"
+    xmlns:order2cash-order2erp-system-api="http://www.mulesoft.org/schema/mule/order2cash-order2erp-system-api" xmlns:order2cash-account-process-api="http://www.mulesoft.org/schema/mule/order2cash-account-process-api"
+    xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/order2cash-account-process-api http://www.mulesoft.org/schema/mule/order2cash-account-process-api/current/mule-order2cash-account-process-api.xsd
+http://www.mulesoft.org/schema/mule/order2cash-order2erp-system-api http://www.mulesoft.org/schema/mule/order2cash-order2erp-system-api/current/mule-order2cash-order2erp-system-api.xsd
+http://www.mulesoft.org/schema/mule/order2cash-opportunity2crm-system-api http://www.mulesoft.org/schema/mule/order2cash-opportunity2crm-system-api/current/mule-order2cash-opportunity2crm-system-api.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd">
+
+    <global-property doc:name="Global Property" doc:id="ce1dfb02-3043-4a20-add3-2b312beeb24f" name="mule.env" value="dev" />
+    <configuration-properties doc:name="Configuration properties" doc:id="e0cb7a81-2277-478b-aba5-a29c25f21cd4" file="common.properties" />
+    <configuration-properties doc:name="Configuration properties" doc:id="fd03889e-f0df-42d1-ba24-d3a747f53c22" file="mule.${mule.env}.properties" />       
+	<http:listener-config name="cartmanagement-httpListenerConfig">
+        <http:listener-connection host="0.0.0.0" port="${http.port}" />
+    </http:listener-config>
+    <apikit:config name="cartmanagement-config" api="cartmanagement.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+	<api-gateway:autodiscovery apiId="${apiId}" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="ae5ed04b-fc14-46f5-9fdd-50c2d7577e23" flowRef="cartmanagement-main" />
+
+</mule>

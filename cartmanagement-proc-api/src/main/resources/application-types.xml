@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="sysapiReq" format="json">
+      <types:shape format="weave" example="examples/sysApi_request-1.json"><![CDATA[%dw 2.0
+
+type sysapiReq = {|
+  customerId: String, 
+  Spacetype: String, 
+  capacity: Number {"typeId": "int"}, 
+  Location: String, 
+  MoveinDate: String, 
+  MoveOutDate: String, 
+  BillingFrq: String, 
+  Cost: String, 
+  Duration: Number {"typeId": "int"}
+|} {"example": "{\\\"customerId\\\":\\\"123\\\",\\\"Spacetype\\\":\\\"dedicated\\\",\\\"capacity\\\":10,\\\"Location\\\":\\\"Gaitheresburg\\\",\\\"MoveinDate\\\":\\\"2022-06-25\\\",\\\"MoveOutDate\\\":\\\"2022-06-30\\\",\\\"BillingFrq\\\":\\\"monthly\\\",\\\"Cost\\\":\\\"100\\\",\\\"Duration\\\":639}"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#fffd9f4a-8202-4971-931d-54ae23dfdc46">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="sysapiReq"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="sysapiReq"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:request-config name="HTTP_ProcApi_Request_configuration" doc:name="HTTP Request configuration" doc:id="9a395a5d-7b5c-4daf-87c5-b0abe22ef459" >
+		<http:request-connection host="${procapi.host}" port="${procapi.port}" />
+	</http:request-config>
+	<sub-flow name="post__implementationSub_Flow" doc:id="1c99ba07-a529-4e1f-9b90-df27eb4dd2ce" >
+		<ee:transform doc:name="Store input data" doc:id="4c62e4dc-adee-4fdc-9e5d-6620d7afe80d" >
+			<ee:message />
+			<ee:variables >
+				<ee:set-variable variableName="inputData" ><![CDATA[%dw 2.0
+output application/java
+---
+payload]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<logger level="INFO" doc:name="Log input data" doc:id="10e232b3-6444-4f29-b976-ad3209420505" message="vars.inputData=#[output application/json --- vars.inputData]" />
+<!-- [STUDIO:"Retrieving opportunity"]		<tracking:transaction doc:name="Retrieving opportunity" doc:id="8224e643-09a9-4e68-ac68-292f6421fe34" id="Retrieving opportunity" /> [STUDIO] -->
+	</sub-flow>
+	<sub-flow name="POST_cart_implementationSub_Flow" doc:id="05df4245-724a-4cda-ab54-eb87e6e4c0ab" >
+		<logger level="INFO" doc:name="Logger" doc:id="377924c7-814b-4ee1-8e9b-a1d9cf35ab16" message="request received to add item to cart"/>
+		<ee:transform doc:name="Transform Message" doc:id="50d6c196-6f68-4c62-8806-d129f04b7ae9" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	customerId: vars.customerId,
+	Spacetype: payload.Spacetype[0],
+	capacity: payload.capacity[0],
+	Location: payload.Location[0],
+	MoveinDate: payload.MoveinDate[0],
+	MoveOutDate: payload.MoveOutDate[0],
+	BillingFrq: payload.BillingFrq[0],
+	Cost: payload.Cost[0],
+	Duration: payload.Duration[0]
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<try doc:name="Try" doc:id="8c714dc2-b3f9-4719-99ee-673286434942" >
+			<http:request method="POST" doc:name="Request" doc:id="8c239b2f-34ab-4078-896a-a130e3bbce92" config-ref="HTTP_ProcApi_Request_configuration" path="/procapi/addtocart" />
+			<error-handler >
+				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="4e54832e-2602-415d-a759-f8c4e5e1f97e" >
+					<logger level="ERROR" doc:name="Logger" doc:id="eb46e20f-cf99-4499-aae9-5b2093320019" message="Error occured while calling Proc api"/>
+					<ee:transform doc:name="Transform Message" doc:id="4f6e9034-128a-4bb9-8399-a880962cca16" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	correlationId: correlationId,
+	errorCategory: "Technical",
+	errorType: error.errorType.identifier,
+	errorMessage: "Error while adding to the Cart",
+	errorDetailedDesc: error.detailedDescription
+	
+}]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+				</on-error-propagate>
+			</error-handler>
+		</try>
+		<logger level="INFO" doc:name="exit_Logger" doc:id="2b6b07d0-4ae5-4e89-a7c3-22b24c5a3149" message="request completed  to add item to cart" />
+	</sub-flow>
+	<sub-flow name="get_cart_implementationSub_Flow" doc:id="497fa593-2956-4c44-a46a-189817ae991c" >
+		<logger level="INFO" doc:name="entry_Logger" doc:id="e7891ddc-4176-4caa-8510-7b7df09ce394" message="request received to get item from cart" />
+		<try doc:name="Try" doc:id="2e6aadec-2b07-483a-b76e-dd3500137dfc" >
+			<http:request method="GET" doc:name="Request" doc:id="16033fb8-ceda-4de3-ae14-362039df5921" config-ref="HTTP_ProcApi_Request_configuration" path="/procapi/getfromcart/{customerId}">
+				<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"customerId" : vars.customerId
+}]]]></http:uri-params>
+			</http:request>
+			<ee:transform doc:name="Transform Message" doc:id="b9d8d830-5941-4fec-a625-acc870df2275" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+[{
+	Spacetype: payload.Spacetype,
+	capacity: payload.capacity,
+	Location: payload.Location,
+	MoveinDate: payload.MoveinDate,
+	MoveOutDate: payload.MoveOutDate,
+	BillingFrq: payload.BillingFrq,
+	Cost: payload.Cost,
+	Duration: payload.Duration
+}]]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<error-handler >
+				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="8630eb4e-491d-4486-bfd3-08c786dd6e6b" >
+					<logger level="ERROR" doc:name="error_Logger" doc:id="0c73ea5d-ae0f-4f08-98c9-97a9a63e3a32" message="Error occured while calling Proc api" />
+					<ee:transform doc:name="Transform Message" doc:id="8eb30e54-c178-4e01-81df-6564df6a0f47" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	correlationId: correlationId,
+	errorCategory: "Technical",
+	errorType: error.errorType.identifier,
+	errorMessage: "Cart Not found",
+	errorDetailedDesc: error.detailedDescription
+	
+}]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+				</on-error-propagate>
+			</error-handler>
+		</try>
+		<logger level="INFO" doc:name="exit_Logger" doc:id="3fbf946b-6b0a-4de6-9a26-f53f6d2abfb4" message="request completed  to add item to cart" />
+	</sub-flow>
+</mule>

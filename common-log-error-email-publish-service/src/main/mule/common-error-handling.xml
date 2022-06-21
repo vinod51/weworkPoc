@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<error-handler name="common-error-handlingError_Handler" doc:id="8f1b5eaf-16f5-467b-afc2-a217a596223e" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="732a2f6d-872d-4d03-afff-91fa130de973" type="DB:CONNECTIVITY, HTTP:CONNECTIVITY">
+			<ee:transform doc:name="Transform Message" doc:id="7b4e414a-78e3-43d6-bf7e-979b6b6bf4c7" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	correlationId: correlationId,
+	errorCategory: "Technical",
+	errorType: error.errorType,
+	errorMessage: error.description,
+	errorDetailedDesc: error.detailedDescription
+	
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<flow-ref doc:name="Flow Reference" doc:id="3bfef72c-1a13-4d01-a864-7b5cbeaef4c7" name="log_error"/>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="95270352-d8ae-424d-b369-f39824894c8a" type="ANY">
+			<ee:transform doc:name="Transform Message" doc:id="f707a833-778d-461c-a971-959db5881c0d" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	correlationId: correlationId,
+	errorCategory: "Technical",
+	errorType: error.errorType.identifier,
+	errorMessage: error.description,
+	errorDetailedDesc: error.detailedDescription
+	
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<flow-ref doc:name="Flow Reference" doc:id="758dd0b9-d711-4ad3-af0a-ad8f7445ea25" name="log_error"/>
+		</on-error-propagate>
+	</error-handler>
+	<sub-flow name="log_error" doc:id="0c0ed457-d26d-46a9-ad57-ce3b91fe627b" >
+		<async doc:name="Async" doc:id="c99bea15-72df-4f9d-829b-0385b3831d18" >
+			<logger level="ERROR" doc:name="Logger" doc:id="0ac351a4-e80c-4e8e-b4dd-d83e21ede588" message="Error occured #[payload]"/>
+		</async>
+	</sub-flow>
+</mule>

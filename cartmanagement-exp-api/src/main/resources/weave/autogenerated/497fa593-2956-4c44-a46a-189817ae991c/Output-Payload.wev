@@ -1,0 +1,10 @@
+%dw 2.0
+
+type auto_497fa593_2956_4c44_a46a_189817ae991c_Output_Payload = {|
+  correlationId: String, 
+  errorCategory: String, 
+  errorType: String | Null, 
+  errorMessage: String, 
+  errorDetailedDesc: String | Null
+|}
+

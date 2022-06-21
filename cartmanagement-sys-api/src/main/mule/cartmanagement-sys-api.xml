@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="cartmanagement-sys-apiFlow" doc:id="97d261e1-a021-4657-b26d-883fa40ed670" >
+		<http:listener doc:name="Listener" doc:id="85169412-1dfe-4515-a48b-6eb6f9be7473" config-ref="cartmanagement-httpListenerConfig" path="/sysapi/addtocart" allowedMethods="POST"/>
+		<logger level="INFO" doc:name="Logger" doc:id="f5bb868c-b506-49f5-91f4-affc12002449" message="input received #[payload]"/>
+		<os:store doc:name="Store" doc:id="c155e985-260e-4e94-9ba4-c348af927615" key="#[payload.customerId]" objectStore="Cart_Object_store"/>
+		<ee:transform doc:name="Transform Message" doc:id="4b2d9e1f-eb94-4614-ad11-65bccfcd2194" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	Status: "Item successfully added to cart"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="cartmanagement-sys-api-get_Flow" doc:id="1c43f8cc-830d-4eb0-921d-9d395611c793" >
+		<http:listener doc:name="Listener" doc:id="b138daeb-39da-42ba-8a04-379c26438764" config-ref="cartmanagement-httpListenerConfig" path="/sysapi/getfromcart/{customerId}" allowedMethods="GET">
+			<http:error-response statusCode="#[vars.statusCode]" >
+				<http:body ><![CDATA[#[payload]]]></http:body>
+			</http:error-response>
+		</http:listener>
+		<logger level="INFO" doc:name="Logger" doc:id="6932afb2-c55b-495e-a808-a2e0ab2b09ef" message="#[attributes.uriParams.customerId]"/>
+		<try doc:name="Try" doc:id="c84a77c3-ef6e-42ab-9bdb-c8fe6dd6ed89" >
+			<os:retrieve doc:name="Retrieve" doc:id="4e0506fb-6f76-4449-a145-ff3e53fa2d1b" key="#[attributes.uriParams.customerId]" objectStore="Cart_Object_store" />
+			<error-handler >
+				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="436856e5-7cd7-4430-a1bb-8a5f9df480c5" type="OS:KEY_NOT_FOUND">
+					<ee:transform doc:name="Transform Message" doc:id="520526c6-4f87-4592-8a7c-3a86ac60f9ee" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	errorMessage:"Cart not found for the customer" 
+	
+}]]></ee:set-payload>
+						</ee:message>
+						<ee:variables >
+							<ee:set-variable variableName="statusCode" ><![CDATA[%dw 2.0
+output application/java
+---
+"404"]]></ee:set-variable>
+						</ee:variables>
+					</ee:transform>
+				</on-error-propagate>
+			</error-handler>
+		</try>
+	</flow>
+</mule>

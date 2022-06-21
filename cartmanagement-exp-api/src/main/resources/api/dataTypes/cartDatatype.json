@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "array",
+  "items": [
+    {
+      "type": "object",
+      "properties": {
+        "Spacetype": {
+          "type": "string"
+        },
+        "capacity": {
+          "type": "integer"
+        },
+        "Location": {
+          "type": "string"
+        },
+        "MoveinDate": {
+          "type": "string",
+          "format":"date"
+        },
+        "Duration": {
+          "type": "integer"
+        },
+        "MoveOutDate": {
+          "type": "string",
+          "format":"date"
+        },
+        "BillingFrq": {
+          "type": "string"
+        },
+        "Cost": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "Spacetype",
+        "capacity",
+        "Location",
+        "MoveinDate",
+        "MoveOutDate",
+        "BillingFrq",
+        "Cost"
+      ]
+    }
+  ]
+}

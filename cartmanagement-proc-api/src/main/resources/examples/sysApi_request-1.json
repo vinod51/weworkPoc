@@ -1,0 +1,11 @@
+ {
+	"customerId":"123",
+    "Spacetype": "dedicated",
+    "capacity": 10,
+    "Location": "Gaitheresburg",
+    "MoveinDate": "2022-06-25",
+    "MoveOutDate": "2022-06-30",
+    "BillingFrq": "monthly",
+    "Cost": "100",
+    "Duration": 639
+  }

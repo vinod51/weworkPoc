@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:request-config name="SysApiHTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="f97fd21f-46db-4cdc-b4cb-83f4fe8451f4" basePath="/sysapi" >
+		<http:request-connection host="${sysapi.host}" port="${sysapi.port}" />
+	</http:request-config>
+	<flow name="cartmanagement-proc-apiFlow" doc:id="f7e3b354-b15b-476c-9dfa-bfe409ec8eda" >
+		<http:listener doc:name="Listener" doc:id="2735e029-c0b4-4f1a-9fa7-0a7cdf7daec1" config-ref="cartmanagement-httpListenerConfig" path="/procapi/addtocart" allowedMethods="POST"/>
+		<logger level="INFO" doc:name="Logger" doc:id="8293ea12-4b84-42f5-8a56-262ee51f032b" message="request received #[payload]"/>
+		<ee:transform doc:name="Transform Message" doc:id="fffd9f4a-8202-4971-931d-54ae23dfdc46">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	customerId: payload.customerId,
+	Spacetype: payload.Spacetype,
+	capacity: payload.capacity,
+	Location: payload.Location,
+	MoveinDate: payload.MoveinDate,
+	MoveOutDate: payload.MoveOutDate,
+	BillingFrq: payload.BillingFrq,
+	Cost: payload.Cost,
+	Duration: payload.Duration
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="e0821461-27de-4efb-916a-0ff7ed1a7396" message="${sysapi.host}"/>
+		<try doc:name="Try" doc:id="54acb3aa-12bb-4b23-8259-74f27f5b60f6" >
+			<http:request method="POST" doc:name="Request" doc:id="bf5e95ed-c737-4076-a189-7395a6d31b39" config-ref="SysApiHTTP_Request_configuration" path="/addtocart" sendCorrelationId="ALWAYS" correlationId="#[correlationId]" />
+			<error-handler >
+				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="23d4badb-a1fc-4bd2-9402-05c2eb22c4d4" type="ANY">
+					<logger level="ERROR" doc:name="Logger" doc:id="facf1ccf-a3d7-4a7f-9b58-a58a23bf8b39" message="errorReceivedfromSYSapi"/>
+					<ee:transform doc:name="Transform Message" doc:id="eda5fbc5-724e-415b-8acf-31b9978d50fa" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	correlationId: correlationId,
+	errorCategory: "Technical",
+	errorType: error.errorType,
+	errorMessage: error.description,
+	errorDetailedDesc: error.detailedDescription
+	
+}]]></ee:set-payload>
+						</ee:message>
+						<ee:variables >
+							<ee:set-variable variableName="statusCode" ><![CDATA[%dw 2.0
+output application/java
+---
+error.description]]></ee:set-variable>
+						</ee:variables>
+					</ee:transform>
+				</on-error-propagate>
+			</error-handler>
+		</try>
+		<logger level="INFO" doc:name="Logger" doc:id="990fc94a-d3d8-4c00-b9be-dae0644f2339" message="request completed."/>
+	</flow>
+	<flow name="cartmanagement-proc-apiGetFlow" doc:id="2e455450-f3aa-4d18-80f4-4d2fc4167a72" >
+		<http:listener doc:name="Listener" doc:id="cd94feb3-9088-402f-80a3-ae73c6d1a77c" config-ref="cartmanagement-httpListenerConfig" path="/procapi/getfromcart/{customerId}">
+			<http:error-response statusCode="#[vars.statusCode]" >
+				<http:body ><![CDATA[#[payload]]]></http:body>
+			</http:error-response>
+		</http:listener>
+		<logger level="INFO" doc:name="entry_Logger" doc:id="b1f65a95-cb11-4931-a7af-0b32cd8f1055" message="request received for get for customer id #[attributes.uriParams.customerId]"/>
+		<try doc:name="Try" doc:id="97d541e9-684c-4fde-a911-3d16827515b5" >
+			<http:request method="GET" doc:name="Request" doc:id="4f83a54f-d9a4-4ded-9008-3daedd15de63" config-ref="SysApiHTTP_Request_configuration" path="/getfromcart/{customerId}" sendCorrelationId="ALWAYS" correlationId="#[correlationId]">
+			<http:uri-params><![CDATA[#[output application/java
+---
+{
+	"customerId" : attributes.uriParams.customerId
+}]]]></http:uri-params>
+		</http:request>
+			<error-handler >
+				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="190f33bf-a171-4269-a733-5cc6789e1b78" >
+					<logger level="ERROR" doc:name="Logger" doc:id="a9f19964-99a1-42ab-8599-69f00c3665ed" message="Error received from SYS getcart servie"/>
+					<ee:transform doc:name="Transform Message" doc:id="474e5812-49d2-4d17-a0ea-1df0a317d9c9" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	correlationId: correlationId,
+	errorCategory: "Technical",
+	errorType: error.errorType.identifier,
+	errorMessage: "Cart Not found",
+	errorDetailedDesc: error.detailedDescription
+	
+}]]></ee:set-payload>
+						</ee:message>
+						<ee:variables >
+							<ee:set-variable variableName="statusCode" ><![CDATA[%dw 2.0
+output application/java
+---
+404]]></ee:set-variable>
+						</ee:variables>
+					</ee:transform>
+				</on-error-propagate>
+			</error-handler>
+		</try>
+		<logger level="INFO" doc:name="exit_Logger" doc:id="723cfdfc-67ad-40be-b6bc-3ff91b3e8497" message="request completed." />
+	</flow>
+</mule>

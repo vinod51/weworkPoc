@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<sub-flow name="logEntry" doc:id="ca5de9f1-6efe-44b4-a1bf-50741bb5ddcf" >
+		<async doc:name="Async" doc:id="fad4f1f7-ac2e-479a-afb2-ea3e55005778" >
+			<ee:transform doc:name="Transform Message" doc:id="9a9135c9-b66c-4e76-97e0-34179579ccfc" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+fun format(d: DateTime) = d as String {format: "yyyy-MM-dd'T'HH:mm:ss.SSS"}
+---
+{
+	eventTimeStamp:vars.eventTimeStamp default format(now()),
+	applicationName:vars.applicationName,
+	flowName:vars.flowName,
+	instanceId:vars.instanceId,
+	transcationId:vars.transactionId,
+	sourceAppId:vars.sourceAppId,
+	environment:vars.environment
+
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<logger level="INFO" doc:name="LogMessageDetails" doc:id="c909b489-aefb-48fe-8819-a0d436f58591" message="#[payload]"/>
+		</async>
+	</sub-flow>
+	
+	<sub-flow name="logExit" doc:id="59b7988f-216a-4cc1-803d-6d1d3c85066c" >
+		<async doc:name="Async" doc:id="05aeac87-604a-48d9-a554-9cbb1e0b3436" >
+			<ee:transform doc:name="Transform Message" doc:id="d8254fb8-4d03-4c40-a620-fce984a7cd93" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+fun format(d: DateTime) = d as String {format: "yyyy-MM-dd'T'HH:mm:ss.SSS"}
+---
+{
+	eventTimeStamp:vars.eventTimeStamp default format(now()),
+	applicationName:vars.applicationName,
+	flowName:vars.flowName,
+	instanceId:vars.instanceId,
+	transcationId:vars.transactionId,
+	sourceAppId:vars.sourceAppId,
+	environment:vars.environment
+
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<logger level="INFO" doc:name="LogMessageDetails" doc:id="0a2d561b-4bff-4506-8be2-f35b3b9d4606" message="#[payload]"/>
+		</async>
+	</sub-flow>
+</mule>
