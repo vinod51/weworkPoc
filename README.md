@@ -52,4 +52,4 @@ properties:
 cartmanagement-sys-api
 	
 	secure properties concept implimented but not applied yes. for demo purpose added to log to dispaly the decrypted value.
-	
+		Algorithm: AES    ,  mode: CBC
