@@ -50,6 +50,6 @@ properties:
 
 
 cartmanagement-sys-api
-	No need to setany properties. 
 	
+	secure properties concept implimented but not applied yes. for demo purpose added to log to dispaly the decrypted value.
 	
