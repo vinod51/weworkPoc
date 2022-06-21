@@ -53,5 +53,6 @@ output application/java
 				</on-error-propagate>
 			</error-handler>
 		</try>
+		<logger level="INFO" doc:name="Logger" doc:id="9cc3c2da-1f7e-4149-acb3-95bf1e23f0e7" message="decrypted dbhost:  ${secure::enc.dbhost}"/>
 	</flow>
 </mule>

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:os="http://www.mulesoft.org/schema/mule/os"
-	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+<mule xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+	xmlns:os="http://www.mulesoft.org/schema/mule/os" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd">
     <global-property doc:name="Global Property" doc:id="8fdf5e8b-9e00-4158-bf99-ea37fbb69b6f" name="mule.env" value="dev" />
     <configuration-properties doc:name="Configuration properties" doc:id="d5a9d1ad-3f64-46d4-8d69-aedd27e079c4" file="common.properties" />
     <configuration-properties doc:name="Configuration properties" doc:id="373b9c48-2e27-4b26-9eb4-3d9270b9c13a" file="mule.${mule.env}.properties" />       
@@ -20,6 +21,8 @@ http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/cu
 		</os:connection>
 	</os:config>
 	<os:object-store name="Cart_Object_store" doc:name="Object store" doc:id="b4a4ffec-d934-485d-b317-bf5ba5c423e1" maxEntries="100" expirationInterval="60" config-ref="Cart_ObjectStore_Config" />
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="81614b60-0ca8-46a5-af89-da09642a3f13" file="mule.${mule.env}.properties" key="${secureKey}" />
+	<global-property doc:name="Global Property" doc:id="51e64831-2c33-48c3-bbfc-5598bd33641a" name="secureKey" value="ThisisMykey78978" />
 	
 
 </mule>
